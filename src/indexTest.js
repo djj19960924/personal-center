@@ -9,6 +9,8 @@ import * as serviceWorker from './serviceWorker';
 // 这里进行默认js操作
 // import '@js/do';
 
+// antd组件本体按需引入, 具体请使用请查看antd官方文档
+
 console.log(process.env.NODE_ENV)
 
 ReactDOM.render(<Test />, document.getElementById('root'));
