@@ -4,6 +4,10 @@ import './index.less'
 import avatar from '@img/avatar.png'
 import specialOffer from '@img/specialOffer.png'
 import detail from '@img/detail.png'
+import shipped from '@img/shipped.png'
+import waitPay from '@img/waitPay.png'
+import waitShip from '@img/waitShip.png'
+import waitAddress from '@img/waitAddress.png'
 
 class Home extends Component{
     render(){
@@ -35,6 +39,33 @@ class Home extends Component{
                             </div>
                             
                         </div>
+
+                        <div className="shopOrder">
+                            <div className="shopOrder-title">商品订单</div>
+                            <div className="shopOrder-features">
+                                <div className="wait-address">
+                                    <div className="bubble">1</div>
+                                    <img src={waitAddress} className="wait-address-img" />
+                                    <div className="wait-address-text">待填地址</div>
+                                </div>
+                                <div className="wait">
+                                    <div className="bubble">3</div>
+                                    <img src={waitPay} className="wait-pay-img"/>
+                                    <div className="wait-pay-text">待支付</div>
+                                </div>
+                                <div className="wait">
+                                    <div className="bubble">1</div>
+                                    <img src={waitShip} className="wait-ship-img"/>
+                                    <div className="wait-ship-text">待发货</div>
+                                </div>
+                                <div className="wait">
+                                    <div className="bubble">4</div>
+                                    <img src={shipped} className="shipped-img"/>
+                                    <div className="shipped-text">已发货</div>
+                                </div>
+                            </div>
+                        </div>
+                    
                     </div>
                     
                     
