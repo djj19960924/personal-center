@@ -1,0 +1,98 @@
+@import (reference) "~less/Calculation.less";
+
+.home{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: auto;
+  background-color: #fff;
+  .homeMain{
+    .width(750);
+    margin: 0 auto;
+    .main{
+        margin: .257rem auto;
+        .width(710);
+        .avatar{
+            .fontSize(32);
+            .width(280);
+            .height(150);
+            color: #010101;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            .avatarImg{
+                .width(150);
+                .height(150);
+                .marginRight(32);
+                border-radius: 50%;
+            }
+        }
+        .balance{
+            .marginTop(30);
+            .width(710);
+            .height(240);
+            border-radius: .12rem; 
+            background-image:url('../../utils/img/balancebg.png');
+            z-index: -1;
+            display: flex;
+            align-items: center;
+            .balance-main{
+                .width(678);
+                .height(135);
+                .marginLeft(35);
+                display: flex;
+                color: #fff;
+                align-items: center;
+                justify-content: space-between;
+                .balance-left{
+                    .balance-num{
+                        .fontSize(50);
+                        .marginBottom(30)
+                    }
+                    .balance-text{
+                        display: flex;
+                        align-items: center;
+                        .fontSize(32);
+                        .recharge{
+                            .width(160);
+                            .height(45);
+                            line-height: .384rem;
+                            .marginLeft(15);
+                            background-color: #fff;
+                            color: #6975FD;
+                            text-align: center;
+                            border-radius:1.17rem;
+                            position: relative;
+                            .specialOffer{
+                                position: absolute;
+                               .width(84);
+                               .height(31);
+                               top:-0.128rem;
+                               right:-0.597rem
+                            }
+                        }
+                    }
+                }
+                .balance-right{
+                    .width(165);
+                    .height(60);
+                    background-color: #FF87A3;
+                    border-top-left-radius: 1.17rem;
+                    border-bottom-left-radius: 1.17rem;
+                    display: flex;
+                    align-items: center;
+                    .fontSize(32);
+                    .detail{
+                        margin: 0 .05rem 0rem .3rem;
+                        .width(42);
+                        .height(43);
+                    }
+                }
+            }
+        }
+    }
+  }
+  
+}

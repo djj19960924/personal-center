@@ -1,8 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import Test from './Test';
+import './index.less';
 import * as serviceWorker from './serviceWorker';
+
+// 移动端自适应插件, 逻辑上 0.01rem(网页页面) = 1px(设计稿)
+import '@js/phone';
+// 这里是测试版本路由
+import RouterRootTest from "@routes/routerTest"
 
 // 引用各种自定义工具方法
 //import '@js/tool';
@@ -13,9 +17,9 @@ import * as serviceWorker from './serviceWorker';
 
 console.log(process.env.NODE_ENV)
 
-ReactDOM.render(<Test />, document.getElementById('root'));
+ReactDOM.render(
+    <RouterRootTest />,
+    document.getElementById('root')
+);
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
