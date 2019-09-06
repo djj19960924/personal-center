@@ -1,9 +1,8 @@
 import React,{Component} from 'react'
-import { Button } from 'antd-mobile';
 import './index.less'
 import addressBook from '@img/addressBook.png'
 
-class ShipAddress extends Component{
+class ShipAddress extends Component{ 
     render(){
         return (
             <div className="shipAddress">
@@ -18,14 +17,15 @@ class ShipAddress extends Component{
                         </div>
 
                         <div className="receive">
-                            <div className="receiveIcon">收</div>
-                            <div className="receive-title">
-                               填写收件信息
+                            <div className="receive-main">
+                                <div className="receiveIcon">收</div>
+                                <div className="receive-title">填写收件信息</div>
+                                <div className="receive-address">
+                                    <img src={addressBook} />
+                                    <div className="address-book">地址薄</div>
+                                </div>
                             </div>
-                            <div className="receive-address">
-                               <img src={addressBook} />
-                               <div className="address-book">地址薄</div>
-                            </div>
+                        
                         </div>
                     </div>
                 </div>

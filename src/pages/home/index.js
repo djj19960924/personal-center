@@ -1,5 +1,5 @@
 import React,{Component} from 'react'
-import { Button } from 'antd-mobile';
+import { Button } from 'antd';
 import './index.less'
 import avatar from '@img/avatar.png'
 import specialOffer from '@img/specialOffer.png'
