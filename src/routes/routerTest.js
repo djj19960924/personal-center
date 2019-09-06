@@ -5,9 +5,9 @@ import React, {Component} from 'react'
 import { BrowserRouter,Route,Switch } from 'react-router-dom'
 import './router.less'
 
-import Login from '@pages/login/login'
-import Admin from '@pages/admin/admin'
+
 import Home from '@pages/home'
+import shipAddress from '@pages/shipAddress'
 
 
 class RouterRootTest extends Component{
@@ -17,9 +17,10 @@ class RouterRootTest extends Component{
                 <div className='RouterRoot'>
                     {/*Switch只匹配其中一个 */}
                     <Switch>
-                        <Route path='/' component={Home}></Route>
-                        <Route path='/login' component={Login}></Route>
-                        <Route path='/admin' component={Admin}></Route>
+
+                        <Route path='/home' component={Home}></Route>
+                        <Route path='/' component={shipAddress}></Route>
+                        
                     </Switch>
                 </div>
             </BrowserRouter>

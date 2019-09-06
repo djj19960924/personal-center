@@ -1,0 +1,84 @@
+@import (reference) "~less/Calculation.less";
+
+.shipAddress{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: auto;
+  background-color: #fff;
+  .ship-main{
+    .width(750);
+    margin: 0 auto;
+    .main{
+        margin: 0 auto;
+        .width(710);
+        .send{
+            display: flex;
+            align-items: center;
+            .height(150);
+            border-bottom:1px solid #EFEFEF; 
+            .sendIcon{
+                width:.512rem;
+                height:.512rem;
+                border-radius: 50%;
+                color: #fff;
+                text-align: center;
+                line-height: .512rem;
+                background-color: #19D2C5;
+                .fontSize(30);
+                .marginRight(30)
+            }
+            .receiveIcon{
+                background-color: #FF667B;
+            }
+            .send-info{
+                .fontSize(28);
+                .send-name{
+                    .paddingBottom(5) 
+                }
+                .send-address{
+                    .paddingTop(5)
+                }
+            }
+        }
+
+        .receive{
+            display: flex;
+            .marginTop(35);
+            .receiveIcon{
+                width:.512rem;
+                height:.512rem;
+                border-radius: 50%;
+                color: #fff;
+                text-align: center;
+                line-height: .512rem;
+                background-color: #FF667B;
+                .fontSize(30);
+                .marginRight(30)
+            }
+            .receive-title{
+                .fontSize(34);
+                font-weight: bold;
+                .marginRight(284);
+                .marginTop(8);
+            }
+            .receive-address{
+                .fontSize(30);
+                color: #8F9FFF;
+                .marginTop(18);
+                display: flex;
+                .height(30);
+                align-items: center;
+                img{
+                    .width(28);
+                    .height(26);
+                    .marginRight(8);
+                    vertical-align: bottom;
+                }
+            }
+        }
+    }
+  }
+}

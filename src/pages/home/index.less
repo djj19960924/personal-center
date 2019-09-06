@@ -1,5 +1,6 @@
 @import (reference) "~less/Calculation.less";
 
+
 .home{
   position: fixed;
   top: 0;
@@ -8,15 +9,20 @@
   bottom: 0;
   overflow: auto;
   background-color: #fff;
+  .addBoxShadow {
+    box-shadow: 0 .02rem .12rem 0 rgba(104, 99, 251, .3);
+    border-radius: .1rem 
+  }
   .homeMain{
     .width(750);
     margin: 0 auto;
     .main{
-        margin: .257rem auto;
+        padding: .257rem 0;
+        margin: 0 auto;
         .width(710);
         .avatar{
-            .fontSize(32);
-            .width(280);
+            .fontSize(46);
+            .width(300);
             .height(150);
             color: #010101;
             overflow: hidden;
@@ -48,13 +54,13 @@
                 justify-content: space-between;
                 .balance-left{
                     .balance-num{
-                        .fontSize(50);
+                        .fontSize(60);
                         .marginBottom(30)
                     }
                     .balance-text{
                         display: flex;
                         align-items: center;
-                        .fontSize(32);
+                        .fontSize(30);
                         .recharge{
                             .width(160);
                             .height(45);
@@ -83,7 +89,7 @@
                     border-bottom-left-radius: 1.17rem;
                     display: flex;
                     align-items: center;
-                    .fontSize(32);
+                    .fontSize(30);
                     .detail{
                         margin: 0 .05rem 0rem .3rem;
                         .width(42);
@@ -94,14 +100,14 @@
         }
         .shopOrder{
             .marginTop(54);
-            .fontSize(32);
+            .fontSize(36);
             .shopOrder-title{
                 font-weight:bold;
             }
             .shopOrder-features{
                 .height(182);
                 .marginTop(45);
-                .fontSize(30);
+                .fontSize(28);
                 display: flex;
                 align-items: center;
                 justify-content: space-around;
@@ -143,11 +149,94 @@
                     .marginBottom(10);
                     .marginLeft(5)
                 }
+               
                 .wait-address-img{
                     .marginLeft(20)
                 }
             }
         }
+        
+        .otherService{
+            .marginTop(54);
+            .fontSize(36);
+            .otherService-title{
+                font-weight:bold;
+            }
+            .otherService-main{
+                .height(182);
+                .marginTop(45); 
+                .otherService-features{
+                    margin:0 .239rem;
+                    .marginTop(45);
+                    .fontSize(30);
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    .otherService-left{
+                        .marginTop(45);
+                        .left-title{
+                            .fontSize(30);
+                        }
+                        .left-content{
+                            .rebate-title{
+                                .marginRight(20)
+                            }
+                            .fontSize(24);
+                            .marginTop(20);
+                            color: #ABABAB;
+                            img{
+                                .marginRight(10);
+                                .width(22);
+                                .height(26); 
+                                vertical-align:text-bottom
+                            }
+                            .rebate-img{
+                                .width(27);
+                                .height(28); 
+                            }
+                            .transfer-img{
+                                .width(28);
+                                .height(28);
+                            }
+                        }
+                        
+                    }
+                    .otherService-right{
+                        .marginTop(45);
+                        .width(150);
+                        .height(50);
+                        color: #fff;
+                        line-height: .426rem;
+                        text-align: center;
+                        border-radius: 1.17rem;
+                        background: linear-gradient(to right,#7983FF,#71CEFF)
+                    }
+                    .transfer{
+                        background: linear-gradient(to right,#FF6479,#FF89A4)
+                    }
+                    .rebate{
+                        .marginTop(25);
+                    }
+                    .rebate-right{
+                        .marginTop(25);
+                        .width(150);
+                        .height(50);
+                        color: #fff;
+                        line-height: .426rem;
+                        text-align: center;
+                        border-radius: 1.17rem;
+                        background: linear-gradient(to right,#FE6F6A,#FDAA95)
+                    }
+                    
+                }
+            }
+            .rebate-main{
+                .height(182);
+                .marginTop(45); 
+            }
+            
+        }
+        
     }
   }
   

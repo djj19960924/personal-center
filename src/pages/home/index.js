@@ -8,6 +8,9 @@ import shipped from '@img/shipped.png'
 import waitPay from '@img/waitPay.png'
 import waitShip from '@img/waitShip.png'
 import waitAddress from '@img/waitAddress.png'
+import globalErrandIcon from '@img/globalErrandIcon.png'
+import balance from '@img/balance.png'
+import transfer from '@img/transfer.png'
 
 class Home extends Component{
     render(){
@@ -42,7 +45,7 @@ class Home extends Component{
 
                         <div className="shopOrder">
                             <div className="shopOrder-title">商品订单</div>
-                            <div className="shopOrder-features">
+                            <div className="shopOrder-features addBoxShadow">
                                 <div className="wait-address">
                                     <div className="bubble">1</div>
                                     <img src={waitAddress} className="wait-address-img" />
@@ -64,11 +67,66 @@ class Home extends Component{
                                     <div className="shipped-text">已发货</div>
                                 </div>
                             </div>
+                        </div> 
+                        
+                        
+                        <div className="otherService">
+                            <div className="otherService-title">其他服务</div>
+                            <div className="otherService-main addBoxShadow">
+                                <div className="otherService-features">
+                                    <div className="otherService-left">
+                                        <div className="left-title">全球跑腿</div>
+                                        <div className="left-content">
+                                            <img src={globalErrandIcon} />
+                                            全球跑腿：&nbsp;20次
+                                        </div>
+                                        <div></div>
+                                    </div>
+                                    <div className="otherService-right">
+                                        点击进入
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="otherService-main addBoxShadow">
+                                <div className="otherService-features">
+                                    <div className="otherService-left rebate">
+                                        <div className="left-title">宇宙返点社</div>
+                                        <div className="left-content">
+                                            <img src={balance} className="rebate-img"/>
+                                            <span className="rebate-title">待返现&nbsp;2286.37</span>
+                                            <img src={balance} className="rebate-img"/>
+                                            待返现&nbsp;2286.37
+                                        </div>
+                                        <div className="left-content">
+                                            <img src={balance} className="rebate-img"/>
+                                            余额&nbsp;2286.37
+                                        </div>
+                                        <div></div>
+                                    </div>
+                                    <div className="rebate-right">
+                                        点击进入
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="otherService-main addBoxShadow">
+                                <div className="otherService-features">
+                                    <div className="otherService-left">
+                                        <div className="left-title">接送机</div>
+                                        <div className="left-content">
+                                            <img src={transfer} className="transfer-img"/>
+                                            接送机：&nbsp;20次
+                                        </div>
+                                        <div></div>
+                                    </div>
+                                    <div className="otherService-right transfer">
+                                        点击进入
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    
-                    </div>
-                    
-                    
+                    </div>   
                 </div>   
             </div>   
         )
