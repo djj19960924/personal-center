@@ -62,7 +62,6 @@ class ShipAddress extends Component{
 
                         <div className="shop-main">
                             <div className="shop-order">
-
                                 <div className="shop-info">
                                     <div className="shop-title">商品信息</div>
                                     <div className="shop-number">订单编号:123456789123</div>

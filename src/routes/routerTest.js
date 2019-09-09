@@ -9,6 +9,7 @@ import './router.less'
 import Home from '@pages/home'
 import ShipAddress from '@pages/shipAddress'
 import PaySuccess from '@pages/paySuccess'
+import CommodityOrder from '@pages/commodityOrder'
 
 
 class RouterRootTest extends Component{
@@ -18,10 +19,10 @@ class RouterRootTest extends Component{
                 <div className='RouterRoot'>
                     {/*Switch只匹配其中一个 */}
                     <Switch>
-
                         <Route path='/home' component={Home}></Route>
                         <Route path='/shipAddress' component={ShipAddress}></Route>
-                        <Route path='/' component={PaySuccess}></Route>
+                        <Route path='/paySuccess' component={PaySuccess}></Route>
+                        <Route path='/' component={CommodityOrder}></Route>
                     </Switch>
                 </div>
             </BrowserRouter>

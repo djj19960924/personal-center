@@ -1,0 +1,134 @@
+@import (reference) "~less/Calculation.less";
+
+.commodityOrder{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+    background-color: #fff;
+    .commodityOrder-main{
+        padding: .257rem 0;
+        margin: 0 auto;
+        .width(710);
+        .fontSize(28);
+        color:black;
+        .search{
+            .height(84);
+            border-radius: 1rem;  
+            background-color: #EEEEEE;
+            img{
+                .width(35);
+                .height(35);
+                .marginLeft(35);
+                .marginRight(25)
+            }
+            .clearIcon{
+                .width(28);
+                .height(28);
+            }
+            input{
+                background-color: #EEEEEE;
+                height: 100%;
+                .width(500);
+            }
+        }
+        .select-features{
+            .marginTop(45);
+            display: flex;
+            justify-content: space-between;
+            border-bottom:1px solid #F0F0F0;
+            .waited-address-title{
+                color: #FF667B;
+            }
+            .title{
+                .width(114);
+                border-bottom:2px solid #FF667B;
+                .paddingBottom(20);
+            }
+            .other{
+                .width(88);
+                border-bottom:2px solid #FF667B;
+                .paddingBottom(20);
+            }
+        }
+        .shop-order{
+            line-height: 30px;
+            .marginTop(20);
+            .shop-info{
+                display: flex;
+                align-items: baseline;
+                justify-content: space-between;
+            }
+            .shop-detail{
+                display: flex;
+                align-items: baseline;
+                justify-content: space-between;
+                .shop-name{
+                    .width(510);
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis
+                }
+                .shop-single{
+                    .width(170);
+                    display: flex;
+                    align-items: baseline;
+                    justify-content: space-between;
+                    .shop-num{
+                        .fontSize(24);
+                        color:#B0B0B0
+                    }
+                }
+            }
+            .shop-show{
+                .fontSize(24);
+                color: #8F9FFF;
+                display: flex;
+                flex-direction: row-reverse;
+                align-items: baseline;
+                // border-bottom:1px solid #F5F5F5;
+                img{
+                    .width(24);
+                    .height(22);
+                    .marginLeft(5)
+                }
+            }
+            .shop-show-waitpay{
+                display: flex;
+                justify-content: space-between;
+                .shop-show-fare{
+                    display: flex;
+                    .width(180);
+                    justify-content: space-between;
+                    .actually-pay{
+                        color:#FF3B3B
+                    }
+    
+                }
+            }
+            
+            .shop-show-write{
+                display: flex;
+                flex-direction: row-reverse;
+                align-items: baseline;
+                border-bottom:1px solid #F5F5F5;
+                .paddingBottom(20);
+                .shop-write{
+                    .marginTop(10);
+                    .width(165);
+                    .height(50);
+                    display: flex;
+                    color: #fff;
+                    background: linear-gradient(to right,#7983FF,#70CEFF);
+                    border-radius: .3rem;
+                    line-height: .426rem;
+                    justify-content: center;
+                }
+            }  
+            
+        }
+    }
+    
+}
