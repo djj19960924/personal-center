@@ -7,7 +7,8 @@ import './router.less'
 
 
 import Home from '@pages/home'
-import shipAddress from '@pages/shipAddress'
+import ShipAddress from '@pages/shipAddress'
+import PaySuccess from '@pages/paySuccess'
 
 
 class RouterRootTest extends Component{
@@ -19,8 +20,8 @@ class RouterRootTest extends Component{
                     <Switch>
 
                         <Route path='/home' component={Home}></Route>
-                        <Route path='/' component={shipAddress}></Route>
-                        
+                        <Route path='/shipAddress' component={ShipAddress}></Route>
+                        <Route path='/' component={PaySuccess}></Route>
                     </Switch>
                 </div>
             </BrowserRouter>

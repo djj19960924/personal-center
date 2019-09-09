@@ -1,0 +1,36 @@
+@import (reference) "~less/Calculation.less";
+
+.paySuccess{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: auto;
+  background-color: #fff;
+  .paySuccess-main{
+    .width(750);
+    text-align: center;
+    img{
+        .marginTop(180);
+        .width(343);
+        .height(348);
+        .marginBottom(90);
+    }
+    .pay-result{
+        color: black;
+        .fontSize(28);
+    }
+    .look-order{
+        text-align: center;
+        .width(370);
+        .height(80);
+        line-height: .683rem;
+        .fontSize(36);
+        color: #fff;
+        background: linear-gradient(to right,#7983FF,#70CEFF);
+        border-radius: .3rem;
+        margin:1.597rem auto;
+    }
+  }
+}

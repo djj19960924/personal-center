@@ -1,3 +1,4 @@
+@import (reference) "~less/Calculation.less";
 html {
   width: 100%;
   height: 100%;
@@ -25,8 +26,13 @@ html {
     text-decoration: none;
   }
   input{
+    .fontSize(28) !important;
     border:none;
     outline:medium;
     -webkit-appearance:none;
+    .fontSize(28);
+    &::placeholder {
+      .fontSize(28);
+    }
   }
 }

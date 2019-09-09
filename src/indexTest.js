@@ -14,6 +14,7 @@ import RouterRootTest from "@routes/routerTest"
 // import '@js/do';
 
 // antd组件本体按需引入, 具体请使用请查看antd官方文档
+import 'antd/dist/antd.css';
 
 console.log(process.env.NODE_ENV)
 
