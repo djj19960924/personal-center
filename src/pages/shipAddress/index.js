@@ -1,20 +1,26 @@
 import React,{Component} from 'react'
 import './index.less'
-import addressBook from '@img/addressBook.png'
+
 import { Cascader } from 'antd';
 import { List, InputItem } from 'antd-mobile';
 import areaData from '@js/areaData';
 import expandIcon from '@img/expandIcon.png'
-import { blockStatement } from '@babel/types';
+import addressBook from '@img/addressBook.png'
+import alipayIcon from '@img/alipayIcon.png'
+import wechatIcon from '@img/wechatIcon.png'
+import balancePayIcon from '@img/balancePayIcon.png'
+import payCancel from '@img/payCancel.png'
+import paySelectedIcon from '@img/paySelectedIcon.png'
 
 class ShipAddress extends Component{ 
     constructor(props) {
         document.title = "填写收件地址";
         super(props);
         this.state = {
-
           uaddress: "",//详细地址
           address: [],
+          isPay:false,
+          selected:0
         }
     }
 
@@ -23,7 +29,7 @@ class ShipAddress extends Component{
     }
 
     render(){
-        const {address,uaddress}=this.state;
+        const {address,uaddress,isPay,selected}=this.state;
         return (
             <div className="shipAddress">
                 <div className="ship-main">
@@ -45,7 +51,7 @@ class ShipAddress extends Component{
                                     <div className="address-book">地址薄</div>
                                 </div>
                             </div>
-                            <div className="info">
+                            <div className="information">
                                 <InputItem
                                     placeholder="请输入姓名"
                                 >
@@ -59,7 +65,9 @@ class ShipAddress extends Component{
                                 </InputItem>
                                  
                                 <div className="area" style={{display:'flex',marginLeft:'15px',marginTop:'10px',fontSize:'14px',color:'black',borderBottom:'1px solid #EFEFEF',paddingBottom:'5px'}}>
-                                    <span style={{color:'red',marginRight:'10px'}}>*</span><span style={{marginRight:'46px'}}>地区</span>
+                                    <div className="area-title" style={{display:'flex',width:'1.512rem'}}>
+                                        <span style={{color:'red',marginRight:'10px'}}>*</span><span>地区</span>
+                                    </div>
                                     <div className="content-block" style={{display: 'inline-block',marginTop:'-3px'}}>
                                         <Cascader options={areaData} expandTrigger="hover" placeholder="请选择地区"
                                             onChange={this.onChange.bind(this)} id="address" value={address}/>
@@ -129,6 +137,69 @@ class ShipAddress extends Component{
                         
                     </div>
                     
+                    {
+                        isPay?(
+                            <div className='addTips' >
+                                <div className="mask" />
+                                <div className="bullet-main">
+                                    <div className="bullet-content">
+                                        <div className="pay-cancel">
+                                            <img src={payCancel} />
+                                        </div>
+                                        <div className="content-title">
+                                            <strong>请选择支付方式</strong>
+                                        </div>
+                                        <div className="aliPay">
+                                            <div className="aliPay-left">
+                                                <img src={alipayIcon}/>
+                                                支付宝支付
+                                            </div>
+                                            {
+                                                selected === 0 ?(
+                                                    <img src={paySelectedIcon} />
+                                                ):(
+                                                    <div className="pay-selected"></div>
+                                                )
+                                            }   
+                                        </div>
+                                        <div className="aliPay">
+                                            <div className="aliPay-left">
+                                                <img src={wechatIcon}/>
+                                                微信支付
+                                            </div>
+                                            {
+                                                selected === 1 ?(
+                                                    <img src={paySelectedIcon} />
+                                                ):(
+                                                    <div className="pay-selected"></div>
+                                                )
+                                            }  
+                                        </div>
+                                        <div className="aliPay">
+                                            <div className="aliPay-left">
+                                                <img src={balancePayIcon}/>
+                                                余额支付
+                                            </div>
+                                            {
+                                                selected === 2 ?(
+                                                    <img src={paySelectedIcon} />
+                                                ):(
+                                                    <div className="pay-selected"></div>
+                                                )
+                                            }  
+                                        </div>
+
+                                        <div className="pay-btn">
+                                            确定
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        ):(
+                            <div />
+                        )
+                    }
                 </div>
             </div>   
         )

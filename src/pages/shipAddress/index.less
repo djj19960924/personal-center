@@ -80,9 +80,10 @@
                         vertical-align: bottom;
                     }
                 }
-                .info{
+                .information{
                     .fontSize(28);
                     .height(475);
+                    background-color: red;
                 }
                 
                 
@@ -150,9 +151,9 @@
                     }
                 }
                 .pay{
-                    text-align: center;
                     .width(370);
                     .height(70);
+                    text-align: center;
                     line-height: .597rem;
                     .fontSize(36);
                     color: #fff;
@@ -165,6 +166,108 @@
     }
     
   }
+
+  //弹框
+  .addTips{
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      box-sizing: content-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      
+      .mask {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.5;
+        z-index: 5;
+        background-color: #000;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+    }
+
+      .bullet-main{
+        
+        .fontSize(30);
+        color: #000;
+        position: fixed;
+        border-radius: .1rem;
+        .width(600);
+        .height(626);
+        background: #fff;
+        z-index: 10;
+        .bullet-content{
+            margin: 0 .341rem;
+            .pay-cancel{
+                .marginTop(20);
+                display: flex;
+                flex-direction:row-reverse;
+                img{
+                    .width(30);
+                    .height(30)
+                }
+            }
+            .content-title{
+                .fontSize(34);
+                .marginTop(50);
+            }
+            .aliPay{
+                color:black;
+                .marginTop(40);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                .aliPay-left{
+                    display: flex;
+                    .width(250);
+                    .height(50);
+                    align-items: center; 
+                    img{
+                        .width(42);
+                        .height(42);
+                        .marginRight(35)
+                    }  
+                }
+                .pay-selected{
+                    .width(42);
+                    .height(42);
+                    border-radius:50% ;
+                    border: .0085rem solid #EDEDED; 
+                    
+                }
+                img{
+                    .width(42);
+                    .height(42);
+                }
+            }
+
+            .pay-btn{
+                .width(375);
+                .height(80);
+                text-align: center;
+                line-height: .682rem;
+                .fontSize(36);
+                color: #fff;
+                background: linear-gradient(to right,#7983FF,#70CEFF);
+                border-radius: .3rem;
+                margin: .597rem auto;
+            }
+        }
+        
+    }
+  }
+  
+
+  
+
   .ant-input {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
@@ -186,16 +289,16 @@
 .ant-cascader-menu-item-expand{
     padding-right: 0 !important;
     text-align: center !important;
-  }
-  .ant-cascader-menu-item{
+}
+.ant-cascader-menu-item{
     padding: 0 !important;
     width:2.13rem !important;
     overflow:hidden !important;
     white-space:nowrap !important;
     text-overflow:ellipsis !important;
     text-align: center !important;
-  }
-  .ant-cascader-menus{
+}
+.ant-cascader-menus{
     margin: 0 auto !important;
     position: fixed !important;
     bottom:0 !important;
@@ -203,11 +306,11 @@
     right:0 !important;
     top: auto !important;
     height: 3.6rem !important;
-  }
-  .ant-cascader-picker-label{
+}
+.ant-cascader-picker-label{
     padding: 0 !important;
-  }
-  .ant-cascader-input {
+}
+.ant-cascader-input {
     padding: 0;
     border: 0;
     box-shadow: 0 0 0 0;
@@ -215,7 +318,7 @@
         &::placeholder{
         color: #989898;
         }
-    }
+}
 .ant-cascader-input.ant-input{
     position: static;
     width: 100%;
