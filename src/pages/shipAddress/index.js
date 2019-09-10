@@ -3,10 +3,27 @@ import './index.less'
 import addressBook from '@img/addressBook.png'
 import { Cascader } from 'antd';
 import { List, InputItem } from 'antd-mobile';
+import areaData from '@js/areaData';
 import expandIcon from '@img/expandIcon.png'
+import { blockStatement } from '@babel/types';
 
 class ShipAddress extends Component{ 
+    constructor(props) {
+        document.title = "填写收件地址";
+        super(props);
+        this.state = {
+
+          uaddress: "",//详细地址
+          address: [],
+        }
+    }
+
+    onChange(val, selectedOptions) {
+        this.setState({address: val})
+    }
+
     render(){
+        const {address,uaddress}=this.state;
         return (
             <div className="shipAddress">
                 <div className="ship-main">
@@ -40,13 +57,15 @@ class ShipAddress extends Component{
                                 >
                                 <span style={{color:'red',marginRight:'10px'}}>*</span><span style={{fontSize:'14px'}}>手机号码</span>
                                 </InputItem>
-                                {
-                                    // <InputItem
-                                    //     placeholder="请选择地区"
-                                    // >
-                                    // <span style={{color:'red',marginRight:'10px'}}>*</span><span style={{fontSize:'14px'}}>地区</span>
-                                    // </InputItem> 
-                                }
+                                 
+                                <div className="area" style={{display:'flex',marginLeft:'15px',marginTop:'10px',fontSize:'14px',color:'black',borderBottom:'1px solid #EFEFEF',paddingBottom:'5px'}}>
+                                    <span style={{color:'red',marginRight:'10px'}}>*</span><span style={{marginRight:'46px'}}>地区</span>
+                                    <div className="content-block" style={{display: 'inline-block',marginTop:'-3px'}}>
+                                        <Cascader options={areaData} expandTrigger="hover" placeholder="请选择地区"
+                                            onChange={this.onChange.bind(this)} id="address" value={address}/>
+                                    </div> 
+                                 </div>
+                                
                                 <InputItem
                                     placeholder="请输入详细信息"
                                 >

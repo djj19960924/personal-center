@@ -13,6 +13,12 @@ import balance from '@img/balance.png'
 import transfer from '@img/transfer.png'
 
 class Home extends Component{
+    constructor(props) {
+        document.title = "个人中心";
+        super(props);
+        this.state = {
+        }
+    }
     render(){
         return (
             <div className="home">

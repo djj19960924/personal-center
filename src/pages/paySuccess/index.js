@@ -3,6 +3,12 @@ import './index.less'
 import paySuccess from '@img/paySuccess.png'
 
 class PaySuccess extends Component{
+    constructor(props) {
+        document.title = "支付成功";
+        super(props);
+        this.state = {
+        }
+    }
     render(){
         return (
             <div className="paySuccess">
