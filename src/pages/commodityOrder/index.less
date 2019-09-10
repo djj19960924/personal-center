@@ -39,11 +39,11 @@
             display: flex;
             justify-content: space-between;
             border-bottom:1px solid #F0F0F0;
-            .waited-address-title{
-                color: #FF667B;
+            .waited-titleSelected{
+                color: #FF667B
             }
             .title{
-                .width(114);
+                .width(125);
                 border-bottom:2px solid #FF667B;
                 .paddingBottom(20);
             }
@@ -88,7 +88,6 @@
                 display: flex;
                 flex-direction: row-reverse;
                 align-items: baseline;
-                // border-bottom:1px solid #F5F5F5;
                 img{
                     .width(24);
                     .height(22);
@@ -107,6 +106,9 @@
                     }
     
                 }
+            }
+            .waitpayBorder{
+                border-bottom:1px solid #F5F5F5;
             }
             
             .shop-show-write{
@@ -128,6 +130,9 @@
                 }
             }  
             
+        }
+        .shop-order:last-child{
+            .paddingBottom(50) 
         }
     }
     
