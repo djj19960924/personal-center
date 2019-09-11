@@ -1,9 +1,7 @@
 import React,{Component} from 'react'
 import './index.less'
-
 import { Cascader } from 'antd';
 import { List, InputItem } from 'antd-mobile';
-import areaData from '@js/areaData';
 import expandIcon from '@img/expandIcon.png'
 import addressBook from '@img/addressBook.png'
 import alipayIcon from '@img/alipayIcon.png'
@@ -12,24 +10,106 @@ import balancePayIcon from '@img/balancePayIcon.png'
 import payCancel from '@img/payCancel.png'
 import paySelectedIcon from '@img/paySelectedIcon.png'
 
+import areaData from '@js/areaData';
+
+var {areaList} = require('@js/area-list')
+
+var { parseArea , parse } = require('@js/address-parse')
+parseArea(areaList);
 class ShipAddress extends Component{ 
     constructor(props) {
         document.title = "填写收件地址";
         super(props);
         this.state = {
           uaddress: "",//详细地址
-          address: [],
           isPay:false,
-          selected:0
+          selected:0,
+          detailInfo:'',
+          name:'',
+          mobile:'',
+          area:[],
+          address:''
         }
+        this.pay = this.pay.bind(this);
+        this.paste = this.paste.bind(this);
+        this.handleArea = this.handleArea.bind(this)
+        this.handleName = this.handleName.bind(this)
+        this.handleMobile = this.handleMobile.bind(this)
+        this.handleAddress = this.handleAddress.bind(this)
+        
     }
 
-    onChange(val, selectedOptions) {
-        this.setState({address: val})
+    handleArea(val, selectedOptions) {
+        this.setState({area: val})
+    }
+    handleName(e) {
+        this.setState({
+            name:e
+        })
+    }
+    handleMobile(e) {
+        this.setState({
+            mobile:e
+        })
+    }
+    handleAddress(e) {
+        this.setState({
+            address:e
+        })
+    }
+
+    paste(e){
+        parseArea(areaData);
+        var { name,mobile,address,area } = this.state
+        var detailInfo = e.target.value
+        this.setState({
+            detailInfo:e.target.value
+        })
+        let result = parse(detailInfo)
+        name = result.name
+        mobile = result.mobile
+        address = result.addr
+        if(result.province==="北京"||result.province==="上海"||result.province==="重庆"||result.province==="天津"){
+            result.province=result.province+"市"
+            result.city=result.city+"市"
+        }else if(result.province==="新疆"||result.province==="内蒙古"||result.province==="广西"||result.province==="西藏"||result.province==="宁夏"||result.province==="新疆维吾尔"){
+            if(result.province==="宁夏"){
+                result.province=result.province+"回族"
+            }else if(result.province==="广西"){
+                result.province=result.province+"壮族"
+            }else if(result.province==="新疆"){
+                result.province=result.province+"维吾尔"
+            }
+            result.province=result.province+"自治区"
+            result.city=result.city+"市"
+
+        }else if(result.province==="香港"||result.province==="澳门"){
+            result.province=result.province+"特别行政区";
+            result.city=result.city
+        }else{
+            result.province=result.province+"省";
+            result.city=result.city+"市"
+        }
+        area = [result.province,result.city,result.area]
+        this.setState({
+            name,mobile,address,area
+        })
+    }
+
+    pay(){
+        const { isPay } = this.state;
+        this.setState({
+            isPay:!isPay
+        })
+    }
+
+    componentDidUpdate(){
+        console.log('update')
     }
 
     render(){
-        const {address,uaddress,isPay,selected}=this.state;
+        const {isPay,selected,detailInfo,name,mobile,address,area}=this.state;
+        console.log('area:',area)
         return (
             <div className="shipAddress">
                 <div className="ship-main">
@@ -52,38 +132,47 @@ class ShipAddress extends Component{
                                 </div>
                             </div>
                             <div className="information">
-                                <InputItem
-                                    placeholder="请输入姓名"
-                                >
-                                    <span style={{color:'red',marginRight:'10px'}}>*</span><span style={{fontSize:'14px'}}>姓名</span>
-                                
-                                </InputItem>
-                                <InputItem
-                                    placeholder="请输入手机号码"
-                                >
-                                <span style={{color:'red',marginRight:'10px'}}>*</span><span style={{fontSize:'14px'}}>手机号码</span>
-                                </InputItem>
-                                 
-                                <div className="area" style={{display:'flex',marginLeft:'15px',marginTop:'10px',fontSize:'14px',color:'black',borderBottom:'1px solid #EFEFEF',paddingBottom:'5px'}}>
-                                    <div className="area-title" style={{display:'flex',width:'1.512rem'}}>
-                                        <span style={{color:'red',marginRight:'10px'}}>*</span><span>地区</span>
+                                <List>
+                                    <InputItem
+                                        placeholder="请输入姓名"
+                                        value={name}
+                                        onChange={this.handleName}
+                                    >
+                                        <span className="star">*</span><span className="starName">姓名</span>
+                                    
+                                    </InputItem>
+                                    <InputItem
+                                        placeholder="请输入手机号码"
+                                        value={mobile}
+                                        onChange={this.handleMobile}
+                                    >
+                                        <span className="star">*</span><span className="starName">手机号码</span>
+                                    </InputItem>
+                                    
+                                    <div className="area">
+                                        <div className="area-title">
+                                            <span className="star">*</span><span>地区</span>
+                                        </div>
+                                        <div className="content-block">
+                                            <Cascader options={areaData} placeholder="请选择地区"  
+                                                onChange={this.handleArea}
+                                                value={area}
+                                            />
+                                        </div> 
                                     </div>
-                                    <div className="content-block" style={{display: 'inline-block',marginTop:'-3px'}}>
-                                        <Cascader options={areaData} expandTrigger="hover" placeholder="请选择地区"
-                                            onChange={this.onChange.bind(this)} id="address" value={address}/>
-                                    </div> 
-                                 </div>
-                                
-                                <InputItem
-                                    placeholder="请输入详细信息"
-                                >
-                                <span style={{color:'red',marginRight:'10px'}}>*</span><span style={{fontSize:'14px'}}>详细信息</span>
-                                </InputItem>
+                                    
+                                    <InputItem
+                                        placeholder="请输入详细信息"
+                                        value={address}
+                                        onChange={this.handleAddress}
+                                    >
+                                        <span className="star">*</span><span className="starName">详细信息</span>
+                                    </InputItem>
 
-                                <div className="addressWrite" style={{height:'87px',background:'#EEEEEE',marginTop:'15px',marginLeft:'15px'}}>
-                                    <textarea placeholder="粘贴如“南京市鼓楼区赛程国际大赛1216 张倩请13260771839”的信息，我们将为您智能识别填写" style={{border:'none',background:'#EEEEEE',width:'90%',height:'82px',resize:'none',marginLeft:'15px',marginTop:'5px',color:'black'}}></textarea>
-                                </div>
-                                
+                                    <div className="addressWrite">
+                                        <textarea value={detailInfo} placeholder="粘贴如“南京市鼓楼区赛程国际大赛1216张倩倩13260771839”的信息，我们将为您智能识别填写" onChange={this.paste}></textarea>
+                                    </div>
+                                </List>
                             </div>
                         </div>
 
@@ -126,7 +215,7 @@ class ShipAddress extends Component{
                                     <div>实际支付</div>
                                     <div className="actually-pay">￥514</div>
                                 </div>
-                                <div className="pay">
+                                <div className="pay" onClick={this.pay}>
                                     立即支付
                                 </div>
                             </div>
@@ -144,7 +233,7 @@ class ShipAddress extends Component{
                                 <div className="bullet-main">
                                     <div className="bullet-content">
                                         <div className="pay-cancel">
-                                            <img src={payCancel} />
+                                            <img src={payCancel} onClick={this.pay}/>
                                         </div>
                                         <div className="content-title">
                                             <strong>请选择支付方式</strong>

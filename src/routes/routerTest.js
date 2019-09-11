@@ -22,7 +22,7 @@ class RouterRootTest extends Component{
                         <Route path='/home' component={Home}></Route>
                         <Route path='/shipAddress' component={ShipAddress}></Route>
                         <Route path='/paySuccess' component={PaySuccess}></Route>
-                        <Route path='/commodityOrder' component={CommodityOrder}></Route>
+                        <Route path='/' component={CommodityOrder}></Route>
                     </Switch>
                 </div>
             </BrowserRouter>
