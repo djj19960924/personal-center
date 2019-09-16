@@ -1,7 +1,6 @@
 import React,{Component} from 'react'
 import { Button } from 'antd';
 import './index.less'
-import avatar from '@img/avatar.png'
 import specialOffer from '@img/specialOffer.png'
 import detail from '@img/detail.png'
 import shipped from '@img/shipped.png'
@@ -17,21 +16,72 @@ class Home extends Component{
         document.title = "个人中心";
         super(props);
         this.state = {
+            unionId:'oD65q0yhIK40LZrHIGdV4ym439xY',
+            personInfo:{},
+            legworkInfoVo:{},
+            rebateInfoVo:{},
+            transferInfoVo:{},
+            crmOrderNum:{}
         }
     }
+
+    componentDidMount() {
+        var { unionId } = this.state
+        fetch('http://192.168.31.211:8000/crmOrderController/getCustomerInfo',
+            {
+                method: 'POST',
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body: JSON.stringify({
+                    unionId:unionId
+                })
+            }
+        ).then(r=>r.json()).then(r=>{
+            console.log('r:',r.data)
+            if(r.status === 10000){
+                if (r.data.nickname) {
+                    r.data.userName = r.data.nickname.substring(0, 1) + '*' + r.data.nickname.substring(r.data.nickname.length - 1, r.data.nickname.length)
+                  } else {
+                    r.data.userName.nickName = "**"
+                }
+                var {rebateInfoVo,legworkInfoVo,transferInfoVo,crmOrderNum} = r.data
+                this.setState({
+                    personInfo:r.data,
+                    rebateInfoVo:rebateInfoVo,
+                    legworkInfoVo:legworkInfoVo,
+                    transferInfoVo:transferInfoVo,
+                    crmOrderNum:crmOrderNum
+                })
+            }
+        })
+    }
+
+    //进入商品订单页
+    enterOrder(currentPage){
+        console.log('currentPage:',currentPage)
+        this.props.history.push({
+            pathname:'/commodityOrder',
+            query:{
+                currentPage:currentPage
+            }
+        })
+    }
+    
     render(){
+        const { personInfo,rebateInfoVo,legworkInfoVo,transferInfoVo,crmOrderNum } = this.state
         return (
             <div className="home">
                 <div className="homeMain">
                     <div className="main">
                         <div className="avatar">
-                            <img src={avatar} className="avatarImg"></img>
-                            <div className="avatarText">QQZ</div>
+                            <img src={personInfo.headImg} className="avatarImg"></img>
+                            <div className="avatarText">{personInfo.userName}</div>
                         </div>
                         <div className="balance">
                             <div className="balance-main">
                                 <div className="balance-left">
-                                    <div className="balance-num">5,421.88</div>
+                                    <div className="balance-num">{rebateInfoVo.balance}</div>
                                     <div className="balance-text">
                                         我的余额
                                         <div className="recharge">
@@ -53,23 +103,48 @@ class Home extends Component{
                             <div className="shopOrder-title">商品订单</div>
                             <div className="shopOrder-features addBoxShadow">
                                 <div className="wait-address">
-                                    <div className="bubble">1</div>
-                                    <img src={waitAddress} className="wait-address-img" />
+                                    {
+                                        crmOrderNum.waitAddressNum ? (
+                                            <div className="bubble">{crmOrderNum.waitAddressNum}</div>
+                                        ):(
+                                            <div></div>
+                                        )
+                                    }
+                                    <img src={waitAddress} className="wait-address-img" onClick={this.enterOrder.bind(this,0)}/>
                                     <div className="wait-address-text">待填地址</div>
                                 </div>
                                 <div className="wait">
-                                    <div className="bubble">3</div>
-                                    <img src={waitPay} className="wait-pay-img"/>
-                                    <div className="wait-pay-text">待支付</div>
+                                    {
+                                        crmOrderNum.waitPayNum ? (
+                                            <div className="bubble">{crmOrderNum.waitPayNum}</div>
+                                        ):(
+                                            <div></div>
+                                        )
+                                    }
+                                    <img src={waitPay} className="wait-pay-img" onClick={this.enterOrder.bind(this,1)}/>
+                                    <div className="wait-pay-text" >待支付</div>
                                 </div>
                                 <div className="wait">
-                                    <div className="bubble">1</div>
-                                    <img src={waitShip} className="wait-ship-img"/>
+                                    
+                                    {
+                                        crmOrderNum.waitSendNum ? (
+                                            <div className="bubble">{crmOrderNum.waitSendNum}</div>
+                                        ):(
+                                            <div></div>
+                                        )
+                                    }
+                                    <img src={waitShip} className="wait-ship-img" onClick={this.enterOrder.bind(this,2)}/>
                                     <div className="wait-ship-text">待发货</div>
                                 </div>
                                 <div className="wait">
-                                    <div className="bubble">4</div>
-                                    <img src={shipped} className="shipped-img"/>
+                                    {
+                                        crmOrderNum.sendedNum ? (
+                                            <div className="bubble">{crmOrderNum.sendedNum}</div>
+                                        ):(
+                                            <div></div>
+                                        )
+                                    }
+                                    <img src={shipped} className="shipped-img" onClick={this.enterOrder.bind(this,3)}/>
                                     <div className="shipped-text">已发货</div>
                                 </div>
                             </div>
@@ -84,7 +159,7 @@ class Home extends Component{
                                         <div className="left-title">全球跑腿</div>
                                         <div className="left-content">
                                             <img src={globalErrandIcon} />
-                                            全球跑腿：&nbsp;20次
+                                            全球跑腿：&nbsp;{legworkInfoVo.reservationTotal}次
                                         </div>
                                         <div></div>
                                     </div>
@@ -100,13 +175,13 @@ class Home extends Component{
                                         <div className="left-title">宇宙返点社</div>
                                         <div className="left-content">
                                             <img src={balance} className="rebate-img"/>
-                                            <span className="rebate-title">待返现&nbsp;2286.37</span>
+                                            <span className="rebate-title">待返现&nbsp;{rebateInfoVo.returningMoney}</span>
                                             <img src={balance} className="rebate-img"/>
-                                            待返现&nbsp;2286.37
+                                            已返现&nbsp;{rebateInfoVo.returnedMoney}
                                         </div>
                                         <div className="left-content">
                                             <img src={balance} className="rebate-img"/>
-                                            余额&nbsp;2286.37
+                                            余额&nbsp;{rebateInfoVo.balance}
                                         </div>
                                         <div></div>
                                     </div>

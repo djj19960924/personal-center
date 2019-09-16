@@ -9,8 +9,8 @@ import wechatIcon from '@img/wechatIcon.png'
 import balancePayIcon from '@img/balancePayIcon.png'
 import payCancel from '@img/payCancel.png'
 import paySelectedIcon from '@img/paySelectedIcon.png'
-
 import areaData from '@js/areaData';
+import collapseIcon from '@img/collapseIcon.png'
 
 var {areaList} = require('@js/area-list')
 
@@ -21,14 +21,22 @@ class ShipAddress extends Component{
         document.title = "填写收件地址";
         super(props);
         this.state = {
-          uaddress: "",//详细地址
           isPay:false,
           selected:0,
           detailInfo:'',
           name:'',
           mobile:'',
           area:[],
-          address:''
+          //详细地址
+          address:'',
+          sendInfo:{},
+          waitAddressDetail:{
+            crmGoodsList:[]
+          },
+
+          unionId:'oD65q02RQfOxVPtaehPjkb3ybt70',
+          openId:'oD65q02RQfOxVPtaehPjkb3ybt70',
+          crmOrderId:''
         }
         this.pay = this.pay.bind(this);
         this.paste = this.paste.bind(this);
@@ -36,8 +44,43 @@ class ShipAddress extends Component{
         this.handleName = this.handleName.bind(this)
         this.handleMobile = this.handleMobile.bind(this)
         this.handleAddress = this.handleAddress.bind(this)
-        
+        this.submitAddress = this.submitAddress.bind(this)
     }
+
+    componentWillMount() {
+        if(this.props.location.query){
+            var waitAddressDetail = this.props.location.query.waitAddressDetail
+            console.log('waitAddressDetail:', this.props.location.query.waitAddressDetail)
+            this.setState({
+                waitAddressDetail:waitAddressDetail,
+                crmOrderId:waitAddressDetail.id
+            })
+        }
+    }
+    
+    componentDidMount() {
+        fetch('http://192.168.31.211:8000/crmOrderController/getSenderList',
+            {
+                method: 'POST',
+                headers:{
+                    "Content-Type":"application/json"
+                }
+            }
+        ).then(r=>r.json()).then(r=>{
+            console.log('r1:',r)
+            if(r.status===10000){
+                this.setState({
+                    sendInfo:r.data[1]
+                })
+            }
+        })
+    }
+
+    submitAddress(){
+        var {name,area,mobile,unionId,openId,address,crmOrderId} = this.state;
+        console.log('crmOrderId:',crmOrderId)
+    }
+    
 
     handleArea(val, selectedOptions) {
         this.setState({area: val})
@@ -102,14 +145,16 @@ class ShipAddress extends Component{
             isPay:!isPay
         })
     }
-
-    componentDidUpdate(){
-        console.log('update')
+    showWaitAddress(){
+        var { waitAddressDetail } = this.state
+        waitAddressDetail.isExpand = !waitAddressDetail.isExpand
+        this.setState({
+            waitAddressDetail:waitAddressDetail
+        })
     }
 
     render(){
-        const {isPay,selected,detailInfo,name,mobile,address,area}=this.state;
-        console.log('area:',area)
+        const {isPay,selected,detailInfo,name,mobile,address,area,waitAddressDetail,sendInfo}=this.state;
         return (
             <div className="shipAddress">
                 <div className="ship-main">
@@ -117,8 +162,8 @@ class ShipAddress extends Component{
                         <div className="send">
                             <div className="sendIcon">寄</div>
                             <div className="send-info">
-                                <div className="send-name">张三 &nbsp;&nbsp;&nbsp; 13260771839</div>
-                                <div className="send-address">南京赛城国际大厦</div>
+                                <div className="send-name">{sendInfo.sender} &nbsp;&nbsp;&nbsp; {sendInfo.senderPhone}</div>
+                                <div className="send-address">{sendInfo.senderAddress}</div>
                             </div>
                         </div>
 
@@ -180,43 +225,77 @@ class ShipAddress extends Component{
                             <div className="shop-order">
                                 <div className="shop-info">
                                     <div className="shop-title">商品信息</div>
-                                    <div className="shop-number">订单编号:123456789123</div>
+                                    <div className="shop-number">订单编号:{waitAddressDetail.orderNo}</div>
                                 </div>
 
-                                <div className="shop-detail">
-                                    <div className="shop-name">黛珂植物韵律洗面奶150ml</div>
-                                    <div className="shop-single">
-                                        <div className="shop-price">￥168</div>
-                                        <div className="shop-num">*10</div>
-                                    </div>
-                                </div>
-                                <div className="shop-detail">
-                                    <div className="shop-name">黛珂植物韵律洗面奶150ml</div>
-                                    <div className="shop-single">
-                                        <div className="shop-price">￥168</div>
-                                        <div className="shop-num">*1</div>
-                                    </div>
-                                </div>
 
+                                {
+                                    waitAddressDetail.crmGoodsList.map((item,index)=>{
+                                        return(
+                                            <div className="shop-detail" key={index}>
+                                                <div className="shop-name">{item.goodsName}</div>
+                                                <div className="shop-single">
+                                                    <div className="shop-price">￥{item.goodsPrice}</div>
+                                                    <div className="shop-num">*{item.goodsNum}</div>
+                                                </div>
+                                            </div>
+                                        )
+                                    })
+                                }
+                                {
+                                    waitAddressDetail.hiddenAddressCrmGoodsList && waitAddressDetail.isExpand===true ? (
+                                        item.hiddenAddressCrmGoodsList.map((item,index)=>{
+                                            return(
+                                                <div className="shop-detail" key={index}>
+                                                    <div className="shop-name">{item.goodsName}</div>
+                                                    <div className="shop-single">
+                                                        <div className="shop-price">￥{item.goodsPrice}</div>
+                                                        <div className="shop-num">*{item.goodsNum}</div>
+                                                    </div>
+                                                </div>)
+                                        })
+                                    ):
+                                    (
+                                        <div></div>
+                                    )
+                                }
+                                
                                 <div className="shop-show">
-                                    <img src={expandIcon} />
-                                    点击展开
+                                    <div className="expand" onClick={this.showWaitAddress.bind(this)}>
+                                        {
+                                            !waitAddressDetail.isExpand ? (
+                                                <div>
+                                                    点击展开
+                                                    <img src={expandIcon} />
+                                                </div>
+                                            ):(
+                                                <div>
+                                                    收起
+                                                    <img src={collapseIcon} />
+                                                </div>
+                                            )
+                                        }
+                                            
+                                    </div>
                                 </div>
 
                                 <div className="shop-column">
                                     <div>商品金额</div>
-                                    <div>￥504</div>
+                                    <div>￥{waitAddressDetail.amount}</div>
                                 </div>
                                 <div className="shop-column">
                                     <div>运费</div>
-                                    <div>+￥10</div>
+                                    <div>+￥{waitAddressDetail.postage}</div>
                                 </div>
                                 <div className="shop-column">
                                     <div>实际支付</div>
-                                    <div className="actually-pay">￥514</div>
+                                    <div className="actually-pay">￥{waitAddressDetail.amount+waitAddressDetail.postage}</div>
                                 </div>
                                 <div className="pay" onClick={this.pay}>
                                     立即支付
+                                </div>
+                                <div className="pay" onClick={this.submitAddress}>
+                                    提交地址
                                 </div>
                             </div>
                             

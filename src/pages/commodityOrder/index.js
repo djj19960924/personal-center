@@ -3,26 +3,162 @@ import './index.less'
 import clearIcon from '@img/clearIcon.png'
 import searchIcon from '@img/searchIcon.png'
 import expandIcon from '@img/expandIcon.png'
-
+import collapseIcon from '@img/collapseIcon.png'
 class CommodityOrder extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
             orderList: [1, 1, 1],
-            currentPage:0
+            currentPage:0,
+            unionId:'oD65q02RQfOxVPtaehPjkb3ybt70',
+            // unionId:window.public.unionId,
+            waitAddressList:[],
+            waitPayList:[],
+            waitShipList:[],
+            alreadyShipList:[],
+            isExpand:false
         }
     }
 
+    componentDidMount() {
+        if(this.props.location.query){
+            if(this.props.location.query.currentPage!=0){
+                var currentPage = this.props.location.query.currentPage
+                this.changeCurrentPage(currentPage)
+                this.setState({
+                    currentPage:currentPage
+                })
+            }
+            
+        }
+        console.log('currentPage:',currentPage)
+        var { unionId,waitAddressList,addressCrmGoodsList } = this.state
+        fetch('http://192.168.31.211:8000/crmOrderController/selectCrmOrderWaitAddressList',
+            {
+                method: 'POST',
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body: JSON.stringify({
+                    unionId:unionId
+                })
+            }
+        ).then(r=>r.json()).then(r=>{
+            
+            if (r.status === 10000) {
+                if(r.data.length===0){
+                    console.log("暂无待填地址商品")
+                }else{
+                    r.data.forEach(element=>{
+                        var crmGoodsList = element.crmGoodsList
+                        if(element.crmGoodsList.length > 2){
+                            element.crmGoodsList = crmGoodsList.slice(0,2)
+                            element.hiddenAddressCrmGoodsList = crmGoodsList.slice(2)
+                        }
+                        element.isExpand = false
+                    })
+                }
+                this.setState({
+                    waitAddressList:r.data
+                })
+            }
+        })
+    }
+
+    showWaitAddress(id){
+        var { waitAddressList } = this.state
+        waitAddressList[id].isExpand = !waitAddressList[id].isExpand
+        this.setState({
+            waitAddressList:waitAddressList
+        })
+    }
+    showWaitPay(id){
+        var { waitPayList } = this.state
+        waitPayList[id].isExpand = !waitPayList[id].isExpand
+        this.setState({
+            waitPayList:waitPayList
+        })
+    }
+    showWaitShip(id){
+        var { waitShipList } = this.state
+        waitShipList[id].isExpand = !waitShipList[id].isExpand
+        this.setState({
+            waitShipList:waitShipList
+        })
+    }
+    showAlreadyShip(id){
+        var { alreadyShipList } = this.state
+        alreadyShipList[id].isExpand = !alreadyShipList[id].isExpand
+        this.setState({
+            alreadyShipList:alreadyShipList
+        })
+    }
+
     changeCurrentPage(currentPage){
-        console.log("currentPage:",currentPage)
+        var { unionId } = this.state
+        var status = currentPage-1
+        if(currentPage != 0){
+            fetch('http://192.168.31.211:8000/crmOrderController/selectCrmOrderList',
+                {
+                    method: 'POST',
+                    headers:{
+                        "Content-Type":"application/json"
+                    },
+                    body: JSON.stringify({
+                        unionId:unionId,
+                        status:status
+                    })
+                }
+            ).then(r=>r.json()).then(r=>{
+                console.log(r)
+                if (r.status === 10000) {
+                    if(r.data.length===0){
+                        console.log("暂无待支付商品")
+                    }else{
+                        r.data.forEach(element=>{
+                            var crmGoodsList = element.crmGoodsList
+                            if(element.crmGoodsList.length > 2){
+                                element.crmGoodsList = crmGoodsList.slice(0,2)
+                                element.hiddenAddressCrmGoodsList = crmGoodsList.slice(2)
+                            }
+                            element.isExpand = false
+                        })
+                    }
+                    if(currentPage===1){
+                        this.setState({
+                            waitPayList:r.data
+                        })
+                    }else if(currentPage===2){
+                        this.setState({
+                            waitShipList:r.data
+                        })
+                    }else{
+                        this.setState({
+                            alreadyShipList:r.data
+                        })
+                    }
+                }
+            })
+        }
         this.setState({
             currentPage:currentPage
         })
     }
 
+    enterAddress(id){
+        var { waitAddressList } = this.state
+        var waitAddressDetail = waitAddressList[id]
+        this.props.history.push({
+            pathname:'/shipAddress',
+            query:{
+                waitAddressDetail:waitAddressDetail
+            }
+        })
+    }
+
     render() {
-        const { orderList,currentPage } = this.state;
+        const { currentPage,waitAddressList,waitPayList,waitShipList,alreadyShipList } = this.state;
         return (
             <div className="commodityOrder">
                 <div className="commodityOrder-main">
@@ -47,77 +183,138 @@ class CommodityOrder extends Component {
                         </div>
                     </div>
                     {
-                        currentPage === 0 ? orderList.map((item, index) => {
+                        currentPage === 0 ? waitAddressList.map((item, index) => {
                             return (
                                 <div className="shop-order" key={index}>
                                     <div className="shop-info">
                                         <div className="shop-title">商品信息</div>
-                                        <div className="shop-number">订单编号：123456789123</div>
+                                        <div className="shop-number">订单编号：{item.orderNo}</div>
                                     </div>
-
-                                    <div className="shop-detail">
-                                        <div className="shop-name">黛珂植物韵律洗面奶150ml</div>
-                                        <div className="shop-single">
-                                            <div className="shop-price">￥168</div>
-                                            <div className="shop-num">*1</div>
-                                        </div>
-                                    </div>
-                                    <div className="shop-detail">
-                                        <div className="shop-name">黛珂植物韵律洗面奶150ml</div>
-                                        <div className="shop-single">
-                                            <div className="shop-price">￥168</div>
-                                            <div className="shop-num">*2</div>
-                                        </div>
-                                    </div>
+                                    
+                                    {
+                                        item.crmGoodsList.map((item,index)=>{
+                                            return(
+                                                <div className="shop-detail" key={index}>
+                                                    <div className="shop-name">{item.goodsName}</div>
+                                                    <div className="shop-single">
+                                                        <div className="shop-price">￥{item.goodsPrice}</div>
+                                                        <div className="shop-num">*{item.goodsNum}</div>
+                                                    </div>
+                                                </div>
+                                            )
+                                        })
+                                    }
+                                    {
+                                        item.hiddenAddressCrmGoodsList && item.isExpand===true ? (
+                                            item.hiddenAddressCrmGoodsList.map((item,index)=>{
+                                                return(
+                                                    <div className="shop-detail" key={index}>
+                                                        <div className="shop-name">{item.goodsName}</div>
+                                                        <div className="shop-single">
+                                                            <div className="shop-price">￥{item.goodsPrice}</div>
+                                                            <div className="shop-num">*{item.goodsNum}</div>
+                                                        </div>
+                                                    </div>)
+                                            })
+                                        ):
+                                        (
+                                            <div></div>
+                                        )
+                                    }
                                     <div className="shop-show">
-                                        <img src={expandIcon} />
-                                        点击展开
+                                        <div className="expand" onClick={this.showWaitAddress.bind(this,index)}>
+                                            {
+                                                !item.isExpand ? (
+                                                    <div>
+                                                        点击展开
+                                                        <img src={expandIcon} />
+                                                    </div>
+                                                ):(
+                                                    <div>
+                                                        收起
+                                                        <img src={collapseIcon} />
+                                                    </div>
+                                                )
+                                            }
+                                            
+                                        </div>
                                     </div>
+                                    
                                     <div className="shop-show-write">
-                                        <div className="shop-write">立即填写</div>
+                                        <div className="shop-write" onClick={this.enterAddress.bind(this,index)}>立即填写</div>
                                     </div>
                                 </div>
                             )
                         }):
                         (
-                            currentPage === 1  ? orderList.map((item, index) => {
+                            currentPage === 1  ? waitPayList.map((item, index) => {
                                 return (
                                     <div className="shop-order" key={index}>
                                         <div className="shop-info">
                                             <div className="shop-title">商品信息</div>
-                                            <div className="shop-number">订单编号：123456789123</div>
+                                            <div className="shop-number">订单编号：{item.orderNo}</div>
                                         </div>
     
-                                        <div className="shop-detail">
-                                            <div className="shop-name">黛珂植物韵律洗面奶150ml</div>
-                                            <div className="shop-single">
-                                                <div className="shop-price">￥168</div>
-                                                <div className="shop-num">*1</div>
-                                            </div>
-                                        </div>
-                                        <div className="shop-detail">
-                                            <div className="shop-name">黛珂植物韵律洗面奶150ml</div>
-                                            <div className="shop-single">
-                                                <div className="shop-price">￥168</div>
-                                                <div className="shop-num">*2</div>
-                                            </div>
-                                        </div>
+                                        {
+                                            item.crmGoodsList.map((item,index)=>{
+                                                return(
+                                                    <div className="shop-detail" key={index}>
+                                                        <div className="shop-name">{item.goodsName}</div>
+                                                        <div className="shop-single">
+                                                            <div className="shop-price">￥{item.goodsPrice}</div>
+                                                            <div className="shop-num">*{item.goodsNum}</div>
+                                                        </div>
+                                                    </div>
+                                                )
+                                            })
+                                        }
+                                        {
+                                            item.hiddenAddressCrmGoodsList && item.isExpand===true ? (
+                                                item.hiddenAddressCrmGoodsList.map((item,index)=>{
+                                                    return(
+                                                        <div className="shop-detail" key={index}>
+                                                            <div className="shop-name">{item.goodsName}</div>
+                                                            <div className="shop-single">
+                                                                <div className="shop-price">￥{item.goodsPrice}</div>
+                                                                <div className="shop-num">*{item.goodsNum}</div>
+                                                            </div>
+                                                        </div>)
+                                                })
+                                            ):
+                                            (
+                                                <div></div>
+                                            )
+                                        }
                                         <div className="shop-show">
-                                            <img src={expandIcon} />
-                                            点击展开
+                                            <div className="expand" onClick={this.showWaitPay.bind(this,index)}>
+                                                {
+                                                    !item.isExpand ? (
+                                                        <div>
+                                                            点击展开
+                                                            <img src={expandIcon} />
+                                                        </div>
+                                                    ):(
+                                                        <div>
+                                                            收起
+                                                            <img src={collapseIcon} />
+                                                        </div>
+                                                    )
+                                                }
+                                                
+                                            </div>
                                         </div>
                                         <div className="shop-show-waitpay">
                                             <div />
                                             <div className="shop-show-fare">
                                                 <div>运费</div>
-                                                <div>+￥10</div>
+                                                <div>+￥{item.postage}</div>
                                             </div>
                                         </div>
                                         <div className="shop-show-waitpay">
                                             <div />
                                             <div className="shop-show-fare">
                                                 <div>合计</div>
-                                                <div className="actually-pay">￥514</div>
+                                                <div className="actually-pay">￥{item.amount}</div>
                                             </div>
                                         </div>
                                         <div className="shop-show-write">
@@ -127,87 +324,148 @@ class CommodityOrder extends Component {
                                 )
                             }):
                             (
-                                currentPage === 2 ? orderList.map((item, index) => {
+                                currentPage === 2 ? waitShipList.map((item, index) => {
                                     return (
                                         <div className="shop-order" key={index}>
                                             <div className="shop-info">
                                                 <div className="shop-title">商品信息</div>
-                                                <div className="shop-number">订单编号：123456789123</div>
+                                                <div className="shop-number">订单编号：{item.orderNo}</div>
                                             </div>
         
-                                            <div className="shop-detail">
-                                                <div className="shop-name">黛珂植物韵律洗面奶150ml</div>
-                                                <div className="shop-single">
-                                                    <div className="shop-price">￥168</div>
-                                                    <div className="shop-num">*1</div>
-                                                </div>
-                                            </div>
-                                            <div className="shop-detail">
-                                                <div className="shop-name">黛珂植物韵律洗面奶150ml</div>
-                                                <div className="shop-single">
-                                                    <div className="shop-price">￥168</div>
-                                                    <div className="shop-num">*2</div>
-                                                </div>
-                                            </div>
+                                            {
+                                                item.crmGoodsList.map((item,index)=>{
+                                                    return(
+                                                        <div className="shop-detail" key={index}>
+                                                            <div className="shop-name">{item.goodsName}</div>
+                                                            <div className="shop-single">
+                                                                <div className="shop-price">￥{item.goodsPrice}</div>
+                                                                <div className="shop-num">*{item.goodsNum}</div>
+                                                            </div>
+                                                        </div>
+                                                    )
+                                                })
+                                            }
+                                            {
+                                                item.hiddenAddressCrmGoodsList && item.isExpand===true ? (
+                                                    item.hiddenAddressCrmGoodsList.map((item,index)=>{
+                                                        return(
+                                                            <div className="shop-detail" key={index}>
+                                                                <div className="shop-name">{item.goodsName}</div>
+                                                                <div className="shop-single">
+                                                                    <div className="shop-price">￥{item.goodsPrice}</div>
+                                                                    <div className="shop-num">*{item.goodsNum}</div>
+                                                                </div>
+                                                            </div>)
+                                                    })
+                                                ):
+                                                (
+                                                    <div></div>
+                                                )
+                                            }
                                             <div className="shop-show">
-                                                <img src={expandIcon} />
-                                                点击展开
+                                                <div className="expand" onClick={this.showWaitShip.bind(this,index)}>
+                                                    {
+                                                        !item.isExpand ? (
+                                                            <div>
+                                                                点击展开
+                                                                <img src={expandIcon} />
+                                                            </div>
+                                                        ):(
+                                                            <div>
+                                                                收起
+                                                                <img src={collapseIcon} />
+                                                            </div>
+                                                        )
+                                                    }
+                                                    
+                                                </div>
                                             </div>
                                             <div className="shop-show-waitpay">
                                                 <div />
                                                 <div className="shop-show-fare">
                                                     <div>运费</div>
-                                                    <div>+￥10</div>
+                                                    <div>+￥{item.postage}</div>
                                                 </div>
                                             </div>
                                             <div className="shop-show-waitpay waitpayBorder">
                                                 <div />
                                                 <div className="shop-show-fare">
                                                     <div>合计</div>
-                                                    <div className="actually-pay">￥514</div>
+                                                    <div className="actually-pay">￥{item.amount}</div>
                                                 </div>
                                             </div>
                                         </div>
                                     )
                                 }):
-                                orderList.map((item, index) => {
+                                alreadyShipList.map((item, index) => {
                                     return (
                                         <div className="shop-order" key={index}>
                                             <div className="shop-info">
                                                 <div className="shop-title">商品信息</div>
-                                                <div className="shop-number">订单编号：123456789123</div>
+                                                <div className="shop-number">订单编号：{item.orderNo}</div>
                                             </div>
         
-                                            <div className="shop-detail">
-                                                <div className="shop-name">黛珂植物韵律洗面奶150ml</div>
-                                                <div className="shop-single">
-                                                    <div className="shop-price">￥168</div>
-                                                    <div className="shop-num">*1</div>
-                                                </div>
-                                            </div>
-                                            <div className="shop-detail">
-                                                <div className="shop-name">黛珂植物韵律洗面奶150ml</div>
-                                                <div className="shop-single">
-                                                    <div className="shop-price">￥168</div>
-                                                    <div className="shop-num">*2</div>
-                                                </div>
-                                            </div>
+                                            {
+                                                item.crmGoodsList.map((item,index)=>{
+                                                    return(
+                                                        <div className="shop-detail" key={index}>
+                                                            <div className="shop-name">{item.goodsName}</div>
+                                                            <div className="shop-single">
+                                                                <div className="shop-price">￥{item.goodsPrice}</div>
+                                                                <div className="shop-num">*{item.goodsNum}</div>
+                                                            </div>
+                                                        </div>
+                                                    )
+                                                })
+                                            }
+
+                                            {
+                                                item.hiddenAddressCrmGoodsList && item.isExpand===true ? (
+                                                    item.hiddenAddressCrmGoodsList.map((item,index)=>{
+                                                        return(
+                                                            <div className="shop-detail" key={index}>
+                                                                <div className="shop-name">{item.goodsName}</div>
+                                                                <div className="shop-single">
+                                                                    <div className="shop-price">￥{item.goodsPrice}</div>
+                                                                    <div className="shop-num">*{item.goodsNum}</div>
+                                                                </div>
+                                                            </div>)
+                                                    })
+                                                ):
+                                                (
+                                                    <div></div>
+                                                )
+                                            }
                                             <div className="shop-show">
-                                                <img src={expandIcon} />
-                                                点击展开
+                                                <div className="expand" onClick={this.showAlreadyShip.bind(this,index)}>
+                                                    {
+                                                        !item.isExpand ? (
+                                                            <div>
+                                                                点击展开
+                                                                <img src={expandIcon} />
+                                                            </div>
+                                                        ):(
+                                                            <div>
+                                                                收起
+                                                                <img src={collapseIcon} />
+                                                            </div>
+                                                        )
+                                                    }
+                                                    
+                                                </div>
                                             </div>
                                             <div className="shop-show-waitpay">
                                                 <div />
                                                 <div className="shop-show-fare">
                                                     <div>运费</div>
-                                                    <div>+￥10</div>
+                                                    <div>+￥{item.postage}</div>
                                                 </div>
                                             </div>
                                             <div className="shop-show-waitpay">
                                                 <div />
                                                 <div className="shop-show-fare">
                                                     <div>合计</div>
-                                                    <div className="actually-pay">￥514</div>
+                                                    <div className="actually-pay">￥{item.amount}</div>
                                                 </div>
                                             </div>
                                             <div className="shop-show-write">

@@ -7,11 +7,12 @@ import * as serviceWorker from './serviceWorker';
 import '@js/phone';
 // 这里是测试版本路由
 import RouterRootTest from "@routes/routerTest"
-
+// 测试微信配置
+//import '@js/testWxConfig';
 // 引用各种自定义工具方法
 //import '@js/tool';
 // 这里进行默认js操作
-// import '@js/do';
+// import '@js/testDo';
 
 // antd组件本体按需引入, 具体请使用请查看antd官方文档
 import 'antd/dist/antd.css';

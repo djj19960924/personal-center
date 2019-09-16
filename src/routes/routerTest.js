@@ -19,10 +19,10 @@ class RouterRootTest extends Component{
                 <div className='RouterRoot'>
                     {/*Switch只匹配其中一个 */}
                     <Switch>
-                        <Route path='/home' component={Home}></Route>
-                        <Route path='/shipAddress' component={ShipAddress}></Route>
-                        <Route path='/paySuccess' component={PaySuccess}></Route>
-                        <Route path='/' component={CommodityOrder}></Route>
+                        <Route exact path='/' component={Home} />
+                        <Route exact path='/shipAddress' component={ShipAddress} />
+                        <Route exact path='/paySuccess' component={PaySuccess} />
+                        <Route exact path='/commodityOrder' component={CommodityOrder} />
                     </Switch>
                 </div>
             </BrowserRouter>
