@@ -10,6 +10,8 @@ import Home from '@pages/home'
 import ShipAddress from '@pages/shipAddress'
 import PaySuccess from '@pages/paySuccess'
 import CommodityOrder from '@pages/commodityOrder'
+import Rebate from '@pages/home/rebate'
+import GlobalErrands from '@pages/home/globalErrands'
 
 
 class RouterRootTest extends Component{
@@ -23,6 +25,8 @@ class RouterRootTest extends Component{
                         <Route exact path='/shipAddress' component={ShipAddress} />
                         <Route exact path='/paySuccess' component={PaySuccess} />
                         <Route exact path='/commodityOrder' component={CommodityOrder} />
+                        <Route exact path='/rebate' component={Rebate} />
+                        <Route exact path='/globalErrands' component={GlobalErrands} />
                     </Switch>
                 </div>
             </BrowserRouter>

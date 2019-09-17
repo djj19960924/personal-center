@@ -67,6 +67,15 @@ class Home extends Component{
             }
         })
     }
+    //进入返点二维码页面
+    enterRebate(){
+        this.props.history.push('/rebate')
+    }
+
+    //进入返点二维码页面
+    enterGlobalErrands(){
+        this.props.history.push('/globalErrands')
+    }
     
     render(){
         const { personInfo,rebateInfoVo,legworkInfoVo,transferInfoVo,crmOrderNum } = this.state
@@ -163,7 +172,7 @@ class Home extends Component{
                                         </div>
                                         <div></div>
                                     </div>
-                                    <div className="otherService-right">
+                                    <div className="otherService-right" onClick={this.enterGlobalErrands.bind(this)}>
                                         点击进入
                                     </div>
                                 </div>
@@ -185,7 +194,7 @@ class Home extends Component{
                                         </div>
                                         <div></div>
                                     </div>
-                                    <div className="rebate-right">
+                                    <div className="rebate-right" onClick={this.enterRebate.bind(this)}>
                                         点击进入
                                     </div>
                                 </div>

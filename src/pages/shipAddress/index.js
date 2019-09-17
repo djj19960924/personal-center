@@ -29,11 +29,10 @@ class ShipAddress extends Component{
           area:[],
           //详细地址
           address:'',
-          sendInfo:{},
+          senderInfo:{},
           waitAddressDetail:{
             crmGoodsList:[]
           },
-
           unionId:'oD65q02RQfOxVPtaehPjkb3ybt70',
           openId:'oD65q02RQfOxVPtaehPjkb3ybt70',
           crmOrderId:''
@@ -67,18 +66,54 @@ class ShipAddress extends Component{
                 }
             }
         ).then(r=>r.json()).then(r=>{
-            console.log('r1:',r)
             if(r.status===10000){
                 this.setState({
-                    sendInfo:r.data[1]
+                    senderInfo:r.data[1]
                 })
             }
         })
     }
 
     submitAddress(){
-        var {name,area,mobile,unionId,openId,address,crmOrderId} = this.state;
-        console.log('crmOrderId:',crmOrderId)
+        var {name,area,mobile,unionId,openId,address,crmOrderId,senderInfo} = this.state;
+        if(!name||!area||!mobile||!address){
+            console.log("请将信息填写完整")
+        }else{
+            var senderId = senderInfo.senderId;
+            var recipientsName = name , 
+                recipientsPhone = mobile,
+                recipientsAddress = address,
+                recipientsProvince = area[0],
+                recipientsCity = area[1],
+                recipientsDistrict = area[2];
+                
+            fetch('http://192.168.31.211:8000/crmOrderController/insertRecipients',
+                {
+                    method: 'POST',
+                    headers:{
+                        "Content-Type":"application/json"
+                    },
+                    body: JSON.stringify({
+                        unionId:unionId,
+                        openId:openId,
+                        senderId:senderId,
+                        recipientsName:recipientsName,
+                        recipientsPhone:recipientsPhone,
+                        recipientsProvince:recipientsProvince,
+                        recipientsCity:recipientsCity,
+                        recipientsDistrict:recipientsDistrict,
+                        recipientsAddress:recipientsAddress,
+                        crmOrderId:crmOrderId
+                    })
+                }
+
+            ).then(r=>r.json()).then(r=>{
+                console.log('r111:',r)
+                if(r.status===10000){
+                    this.props.history.push('/commodityOrder')
+                }
+            })
+        }
     }
     
 
@@ -154,7 +189,7 @@ class ShipAddress extends Component{
     }
 
     render(){
-        const {isPay,selected,detailInfo,name,mobile,address,area,waitAddressDetail,sendInfo}=this.state;
+        const {isPay,selected,detailInfo,name,mobile,address,area,waitAddressDetail,senderInfo}=this.state;
         return (
             <div className="shipAddress">
                 <div className="ship-main">
@@ -162,8 +197,8 @@ class ShipAddress extends Component{
                         <div className="send">
                             <div className="sendIcon">寄</div>
                             <div className="send-info">
-                                <div className="send-name">{sendInfo.sender} &nbsp;&nbsp;&nbsp; {sendInfo.senderPhone}</div>
-                                <div className="send-address">{sendInfo.senderAddress}</div>
+                                <div className="send-name">{senderInfo.sender} &nbsp;&nbsp;&nbsp; {senderInfo.senderPhone}</div>
+                                <div className="send-address">{senderInfo.senderAddress}</div>
                             </div>
                         </div>
 
