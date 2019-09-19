@@ -11,13 +11,11 @@ class CommodityOrder extends Component {
         this.state = {
             orderList: [1, 1, 1],
             currentPage:0,
-            unionId:'oD65q02RQfOxVPtaehPjkb3ybt70',
-            // unionId:window.public.unionId,
             waitAddressList:[],
             waitPayList:[],
             waitShipList:[],
             alreadyShipList:[],
-            isExpand:false
+            isExpand:false,
         }
     }
 
@@ -33,15 +31,14 @@ class CommodityOrder extends Component {
             
         }
         console.log('currentPage:',currentPage)
-        var { unionId,waitAddressList,addressCrmGoodsList } = this.state
-        fetch('http://192.168.31.211:8000/crmOrderController/selectCrmOrderWaitAddressList',
+        fetch(window.theUrl+'/crmOrderController/selectCrmOrderWaitAddressList',
             {
                 method: 'POST',
                 headers:{
                     "Content-Type":"application/json"
                 },
                 body: JSON.stringify({
-                    unionId:unionId
+                    unionId:window.publicData.unionId
                 })
             }
         ).then(r=>r.json()).then(r=>{
@@ -96,17 +93,16 @@ class CommodityOrder extends Component {
     }
 
     changeCurrentPage(currentPage){
-        var { unionId } = this.state
         var status = currentPage-1
         if(currentPage != 0){
-            fetch('http://192.168.31.211:8000/crmOrderController/selectCrmOrderList',
+            fetch(window.theUrl+'/crmOrderController/selectCrmOrderList',
                 {
                     method: 'POST',
                     headers:{
                         "Content-Type":"application/json"
                     },
                     body: JSON.stringify({
-                        unionId:unionId,
+                        unionId:window.publicData.unionId,
                         status:status
                     })
                 }
@@ -148,12 +144,46 @@ class CommodityOrder extends Component {
 
     enterAddress(id){
         var { waitAddressList } = this.state
-        var waitAddressDetail = waitAddressList[id]
-        this.props.history.push({
-            pathname:'/shipAddress',
-            query:{
-                waitAddressDetail:waitAddressDetail
+        localStorage.setItem('waitAddressDetail',JSON.stringify(waitAddressList[id]))
+        this.props.history.push('/shipAddress')
+    }
+
+    pay(orderInfo){
+        console.log('orderInfo:',orderInfo)
+        var orderNo = orderInfo.orderNo ,
+            payMoney = orderInfo.postage+orderInfo.amount,
+            crmOrderId = orderInfo.id
+        fetch(window.theUrl+'/crmOrderController/payAmount',
+            {
+                method: 'POST',
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body: JSON.stringify({
+                    unionId:window.publicData.unionId,
+                    openId:window.publicData.openId,
+                    payType:1,
+                    payMoney:payMoney,
+                    orderNo:orderNo,
+                    crmOrderId:crmOrderId
+                })     
             }
+        ).then(r=>r.json()).then(r=>{
+            console.log('r:',r)
+            WeixinJSBridge.invoke(
+                'getBrandWCPayRequest', {
+                   "appId":r.data.appId,     //公众号名称，由商户传入     
+                   "timeStamp":''+r.data.paytimestamp,         //时间戳，自1970年以来的秒数     
+                   "nonceStr":r.data.nonceStr, //随机串     
+                   "package":r.data.package,     
+                   "signType":"MD5",         //微信签名方式：     
+                   "paySign":r.data.paySign//微信签名 
+                },
+                function(res){
+                    console.log('res:',res)
+                    alert(res)
+                }
+            )
         })
     }
 
@@ -172,7 +202,7 @@ class CommodityOrder extends Component {
                         <div className={currentPage===0 ? 'waited-titleSelected title':'waited-address-title'} onClick={this.changeCurrentPage.bind(this,0)}>
                             待填地址
                         </div>
-                        <div className={currentPage===1 ? 'waited-titleSelected other':'waited-pay-title'} onClick={this.changeCurrentPage.bind(this,1)}>
+                        <div className={currentPage===1 ? 'waited-titleSelected other':'waited-address-title'} onClick={this.changeCurrentPage.bind(this,1)}>
                             待支付
                         </div>
                         <div className={currentPage===2 ? 'waited-titleSelected other':'waited-ship-title'} onClick={this.changeCurrentPage.bind(this,2)}>
@@ -314,11 +344,11 @@ class CommodityOrder extends Component {
                                             <div />
                                             <div className="shop-show-fare">
                                                 <div>合计</div>
-                                                <div className="actually-pay">￥{item.amount}</div>
+                                                <div className="actually-pay">￥{item.amount+item.postage}</div>
                                             </div>
                                         </div>
                                         <div className="shop-show-write">
-                                            <div className="shop-write">立即支付</div>
+                                            <div className="shop-write" onClick={this.pay.bind(this,item)}>立即支付</div>
                                         </div>
                                     </div>
                                 )
@@ -465,7 +495,7 @@ class CommodityOrder extends Component {
                                                 <div />
                                                 <div className="shop-show-fare">
                                                     <div>合计</div>
-                                                    <div className="actually-pay">￥{item.amount}</div>
+                                                    <div className="actually-pay">￥{item.amount+item.postage}</div>
                                                 </div>
                                             </div>
                                             <div className="shop-show-write">

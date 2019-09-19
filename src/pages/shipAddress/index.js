@@ -33,8 +33,6 @@ class ShipAddress extends Component{
           waitAddressDetail:{
             crmGoodsList:[]
           },
-          unionId:'oD65q02RQfOxVPtaehPjkb3ybt70',
-          openId:'oD65q02RQfOxVPtaehPjkb3ybt70',
           crmOrderId:''
         }
         this.pay = this.pay.bind(this);
@@ -44,21 +42,35 @@ class ShipAddress extends Component{
         this.handleMobile = this.handleMobile.bind(this)
         this.handleAddress = this.handleAddress.bind(this)
         this.submitAddress = this.submitAddress.bind(this)
+        this.enterAddressBook = this.enterAddressBook.bind(this)
     }
 
     componentWillMount() {
-        if(this.props.location.query){
-            var waitAddressDetail = this.props.location.query.waitAddressDetail
-            console.log('waitAddressDetail:', this.props.location.query.waitAddressDetail)
-            this.setState({
-                waitAddressDetail:waitAddressDetail,
-                crmOrderId:waitAddressDetail.id
-            })
-        }
+        var waitAddressDetail = localStorage.getItem('waitAddressDetail')
+        this.setState({
+            waitAddressDetail:JSON.parse(waitAddressDetail),
+            crmOrderId:waitAddressDetail.id
+        })
     }
     
     componentDidMount() {
-        fetch('http://192.168.31.211:8000/crmOrderController/getSenderList',
+        this.getReceiveInfo()
+        if(localStorage.getItem('addressInfo')){
+            var addressInfo = localStorage.getItem('addressInfo')
+            addressInfo = JSON.parse(addressInfo)
+            var area = [addressInfo.recipientsProvince,addressInfo.recipientsCity,addressInfo.recipientsDistrict]
+            this.setState({
+                name:addressInfo.recipientsName,
+                mobile:addressInfo.recipientsPhone,
+                area:area,
+                address:addressInfo.recipientsAddress
+            })
+        }
+    }
+
+    //获取寄件人信息
+    getReceiveInfo(){
+        fetch(window.theUrl+'/crmOrderController/getSenderList',
             {
                 method: 'POST',
                 headers:{
@@ -77,7 +89,7 @@ class ShipAddress extends Component{
     submitAddress(){
         var {name,area,mobile,unionId,openId,address,crmOrderId,senderInfo} = this.state;
         if(!name||!area||!mobile||!address){
-            console.log("请将信息填写完整")
+            this.Tips.alert("请将信息填写完整");
         }else{
             var senderId = senderInfo.senderId;
             var recipientsName = name , 
@@ -87,15 +99,15 @@ class ShipAddress extends Component{
                 recipientsCity = area[1],
                 recipientsDistrict = area[2];
                 
-            fetch('http://192.168.31.211:8000/crmOrderController/insertRecipients',
+            fetch(window.theUrl+'/crmOrderController/insertRecipients',
                 {
                     method: 'POST',
                     headers:{
                         "Content-Type":"application/json"
                     },
                     body: JSON.stringify({
-                        unionId:unionId,
-                        openId:openId,
+                        unionId:window.publicData.unionId,
+                        openId:window.publicData.openId,
                         senderId:senderId,
                         recipientsName:recipientsName,
                         recipientsPhone:recipientsPhone,
@@ -188,6 +200,9 @@ class ShipAddress extends Component{
         })
     }
 
+    enterAddressBook(){
+        this.props.history.push('/shipAddress/addressBook')
+    }
     render(){
         const {isPay,selected,detailInfo,name,mobile,address,area,waitAddressDetail,senderInfo}=this.state;
         return (
@@ -206,7 +221,7 @@ class ShipAddress extends Component{
                             <div className="receive-main">
                                 <div className="receiveIcon">收</div>
                                 <div className="receive-title">填写收件信息</div>
-                                <div className="receive-address">
+                                <div className="receive-address" onClick={this.enterAddressBook}>
                                     <img src={addressBook} />
                                     <div className="address-book">地址薄</div>
                                 </div>
@@ -333,9 +348,6 @@ class ShipAddress extends Component{
                                     提交地址
                                 </div>
                             </div>
-                            
-                            
-                        
                         </div>
                         
                     </div>

@@ -4,10 +4,12 @@ import React, {Component} from 'react'
 //Switch代表在某个时间点只去匹配某一个路由，匹配上了不再看其他路由
 import { BrowserRouter,Route,Switch } from 'react-router-dom'
 import './router.less'
-
+// 获取modal
+import Tips from "../components/modalTips";
 
 import Home from '@pages/home'
 import ShipAddress from '@pages/shipAddress'
+import AddressBook from '@pages/shipAddress/addressBook'
 import PaySuccess from '@pages/paySuccess'
 import CommodityOrder from '@pages/commodityOrder'
 import Rebate from '@pages/home/rebate'
@@ -15,6 +17,10 @@ import GlobalErrands from '@pages/home/globalErrands'
 
 
 class RouterRootTest extends Component{
+    constructor(props){
+        super(props)
+        Component.prototype.Tips = new Tips();
+    }
     render(){
         return(
             <BrowserRouter>
@@ -23,6 +29,7 @@ class RouterRootTest extends Component{
                     <Switch>
                         <Route exact path='/' component={Home} />
                         <Route exact path='/shipAddress' component={ShipAddress} />
+                        <Route exact path='/shipAddress/addressBook' component={AddressBook} />
                         <Route exact path='/paySuccess' component={PaySuccess} />
                         <Route exact path='/commodityOrder' component={CommodityOrder} />
                         <Route exact path='/rebate' component={Rebate} />

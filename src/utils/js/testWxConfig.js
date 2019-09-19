@@ -20,7 +20,8 @@
             "scanQRCode",
             "onMenuShareTimeline",
             "onMenuShareAppMessage",
-            "hideMenuItems"
+            "hideMenuItems",
+            "chooseWXPay"
           ]
         });
         // 这里修改微信浏览器分享内容等

@@ -16,7 +16,6 @@ class Home extends Component{
         document.title = "个人中心";
         super(props);
         this.state = {
-            unionId:'oD65q0yhIK40LZrHIGdV4ym439xY',
             personInfo:{},
             legworkInfoVo:{},
             rebateInfoVo:{},
@@ -26,15 +25,14 @@ class Home extends Component{
     }
 
     componentDidMount() {
-        var { unionId } = this.state
-        fetch('http://192.168.31.211:8000/crmOrderController/getCustomerInfo',
+        fetch(window.theUrl+'/crmOrderController/getCustomerInfo',
             {
                 method: 'POST',
                 headers:{
                     "Content-Type":"application/json"
                 },
                 body: JSON.stringify({
-                    unionId:unionId
+                    unionId:window.publicData.unionId
                 })
             }
         ).then(r=>r.json()).then(r=>{
@@ -90,7 +88,7 @@ class Home extends Component{
                         <div className="balance">
                             <div className="balance-main">
                                 <div className="balance-left">
-                                    <div className="balance-num">{rebateInfoVo.balance}</div>
+                                    <div className="balance-num">{rebateInfoVo.balance?rebateInfoVo.balance:'0'}</div>
                                     <div className="balance-text">
                                         我的余额
                                         <div className="recharge">
@@ -122,17 +120,19 @@ class Home extends Component{
                                     <img src={waitAddress} className="wait-address-img" onClick={this.enterOrder.bind(this,0)}/>
                                     <div className="wait-address-text">待填地址</div>
                                 </div>
-                                <div className="wait">
-                                    {
-                                        crmOrderNum.waitPayNum ? (
-                                            <div className="bubble">{crmOrderNum.waitPayNum}</div>
-                                        ):(
-                                            <div></div>
-                                        )
-                                    }
-                                    <img src={waitPay} className="wait-pay-img" onClick={this.enterOrder.bind(this,1)}/>
-                                    <div className="wait-pay-text" >待支付</div>
-                                </div>
+                                {
+                                    <div className="wait">
+                                        {
+                                            crmOrderNum.waitPayNum ? (
+                                                <div className="bubble">{crmOrderNum.waitPayNum}</div>
+                                            ):(
+                                                <div></div>
+                                            )
+                                        }
+                                        <img src={waitPay} className="wait-pay-img" onClick={this.enterOrder.bind(this,1)}/>
+                                        <div className="wait-pay-text" >待支付</div>
+                                    </div>
+                                }
                                 <div className="wait">
                                     
                                     {
